@@ -8,6 +8,7 @@
 	},
 	"dependencies": {
 		"react": "16.0.0-alpha.12",
+		"react-apollo": "^1.4.8",
 		"react-native": "0.46.4",
 		"react-native-elements": "^0.15.0",
 		"react-native-vector-icons": "^4.2.0"
