@@ -23,9 +23,9 @@ class App extends Component {
           return previousResult;
         }
         return {
-          someSuggestions2: [
-            ...previousResult.someSuggestions2,
-            ...fetchMoreResult.someSuggestions2
+          searchSuggestions: [
+            ...previousResult.searchSuggestions,
+            ...fetchMoreResult.searchSuggestions
           ]
         };
       }
@@ -36,20 +36,22 @@ class App extends Component {
   };
 
   handleEnd = () => {
-    const { someSuggestions2, loading } = this.props.data;
+    const { searchSuggestions, loading } = this.props.data;
     if (
       !loading &&
-      this.state.cursor != someSuggestions2[someSuggestions2.length - 1].id
+      this.state.cursor != searchSuggestions[searchSuggestions.length - 1].id
     ) {
       this.setState(
-        state => ({ cursor: someSuggestions2[someSuggestions2.length - 1].id }),
+        state => ({
+          cursor: searchSuggestions[searchSuggestions.length - 1].id
+        }),
         () => this.fetchData()
       );
     }
   };
 
   render() {
-    const data = this.props.data.someSuggestions2 || [];
+    const data = this.props.data.searchSuggestions || [];
     return (
       <View>
         <List>
@@ -70,13 +72,13 @@ class App extends Component {
   }
 }
 
-const getSuggestions2 = gql`
-  query($limit: Int!, $cursor: Int) {
-    someSuggestions2(limit: $limit, cursor: $cursor) {
+const searchSuggestions = gql`
+  query($query: String!, $limit: Int!, $cursor: Int) {
+    searchSuggestions(query: $query, limit: $limit, cursor: $cursor) {
       id
       text
     }
   }
 `;
 
-export default graphql(getSuggestions2)(App);
+export default graphql(searchSuggestions)(App);

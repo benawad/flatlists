@@ -15,5 +15,5 @@ import App from "./App";
 
 export default () =>
   <ApolloProvider client={client}>
-    <App limit={15} />
+    <App limit={15} query="e" />
   </ApolloProvider>;
