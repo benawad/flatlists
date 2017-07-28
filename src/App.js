@@ -5,25 +5,27 @@ import { graphql, gql } from "react-apollo";
 
 class App extends Component {
   state = {
-    offset: 0,
+    cursor: 0,
     loading: false
   };
 
   fetchData = async () => {
     this.setState({ loading: true });
-    this.props.data.fetchMore({
+    console.log("fetching");
+    console.log(this.state.cursor);
+    await this.props.data.fetchMore({
       variables: {
         limit: this.props.limit,
-        offset: this.state.offset
+        cursor: this.state.cursor
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {
         if (!fetchMoreResult) {
           return previousResult;
         }
         return {
-          someSuggestions: [
-            ...previousResult.someSuggestions,
-            ...fetchMoreResult.someSuggestions
+          someSuggestions2: [
+            ...previousResult.someSuggestions2,
+            ...fetchMoreResult.someSuggestions2
           ]
         };
       }
@@ -34,14 +36,20 @@ class App extends Component {
   };
 
   handleEnd = () => {
-    this.setState(
-      state => ({ offset: state.offset + this.props.limit }),
-      () => this.fetchData()
-    );
+    const { someSuggestions2, loading } = this.props.data;
+    if (
+      !loading &&
+      this.state.cursor != someSuggestions2[someSuggestions2.length - 1].id
+    ) {
+      this.setState(
+        state => ({ cursor: someSuggestions2[someSuggestions2.length - 1].id }),
+        () => this.fetchData()
+      );
+    }
   };
 
   render() {
-    const data = this.props.data.someSuggestions || [];
+    const data = this.props.data.someSuggestions2 || [];
     return (
       <View>
         <List>
@@ -62,13 +70,13 @@ class App extends Component {
   }
 }
 
-const getSuggestions = gql`
-  query($limit: Int!, $offset: Int!) {
-    someSuggestions(limit: $limit, offset: $offset) {
+const getSuggestions2 = gql`
+  query($limit: Int!, $cursor: Int) {
+    someSuggestions2(limit: $limit, cursor: $cursor) {
       id
       text
     }
   }
 `;
 
-export default graphql(getSuggestions)(App);
+export default graphql(getSuggestions2)(App);
