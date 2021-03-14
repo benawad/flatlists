@@ -35,7 +35,7 @@ export default class App extends Component {
         <List>
           <FlatList
             data={this.state.data}
-            keyExtractor={(x, i) => i}
+            keyExtractor={(x, i) => String(i)}
             onEndReached={() => this.handleEnd()}
             onEndReachedThreshold={0}
             ListFooterComponent={() =>
